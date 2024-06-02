@@ -15,6 +15,7 @@ export default () => {
       labelText: path,
       key: path,
       icon,
+      props: { class: 'select:none' }
     }
   }
   const sidebarOptions = computed((): MenuOption[] => Object.entries(sidebarConfig.value)
