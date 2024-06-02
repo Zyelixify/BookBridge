@@ -26,8 +26,8 @@ useHead({ title: appName })
       >
         <div class="flex flex-col justify-between h-full">
           <div class="shrink-0 ">
-            <div class="flex justify-center pt-5 pb-2">
-              <!-- logo -->
+            <div class="flex justify-center pb-2">
+              <Logo :is-collapsed="isNavbarCollapsed" />
             </div>
             <n-menu
               :options="sidebarOptions"
@@ -38,7 +38,6 @@ useHead({ title: appName })
               :root-indent="20"
               :indent="10"
               accordion
-              :class="isNavbarCollapsed ? 'mt-10' : ''"
             />
           </div>
           <n-menu
