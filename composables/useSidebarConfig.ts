@@ -1,0 +1,24 @@
+export interface MenuItemConfig {
+  label: string
+  icon?: string
+  isRouterLink: boolean
+}
+
+type MenuItem = Record<string, MenuItemConfig>
+
+export default () => {
+  const sidebarConfig = computed((): MenuItem => ({
+    '/': {
+      label: `Home`,
+      icon: 'uil:home',
+      isRouterLink: true,
+    },
+    '/about': {
+      label: `About`,
+      icon: 'uil:question-circle',
+      isRouterLink: true,
+    },
+  }))
+
+  return sidebarConfig
+}

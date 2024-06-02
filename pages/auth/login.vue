@@ -17,7 +17,7 @@ const formData = ref<{ email: string, password: string }>({
 })
 
 const isLoading = ref<boolean>(false)
-const formRef = ref<FormInst | null>(null)
+const formRef = ref<null>(null)
 
 async function submitHandler(e: MouseEvent) {
   e.preventDefault()
@@ -30,7 +30,6 @@ async function submitHandler(e: MouseEvent) {
     isLoading.value = false
   }
   else {
-    submitError.value = false
     message.success('Logged in successfully')
     return navigateTo(res?.url, { external: true })
   }

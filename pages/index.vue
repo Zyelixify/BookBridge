@@ -1,7 +1,5 @@
 <template>
-  <n-card
-    title="yes"
-  >
+  <n-card>
     <p>hello</p>
   </n-card>
   <n-button>click me</n-button>

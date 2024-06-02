@@ -1,21 +1,13 @@
 <script setup lang="ts">
-import type { MenuOption } from 'naive-ui'
-
+const route = useRoute()
 // const { status } = useAuth()
 const isAuthenticated = true // computed(() => status.value === 'authenticated')
 const isNavbarCollapsed = ref(false)
 
-const sidebarOptions: MenuOption[] = [
-  {
-    key: '/',
-    label: 'Home',
-    isRouterLink: true,
-    doRender: true,
-    icon() {
-      return useIcon('uil:home')
-    },
-  }
-]
+const sidebarOptions = useSidebarOptions()
+const { appName, currentRoute } = useRouteTitle(computed(() => route.path))
+
+useHead({ title: appName })
 </script>
 
 <template>
@@ -33,6 +25,7 @@ const sidebarOptions: MenuOption[] = [
         @expand="isNavbarCollapsed = false"
       >
         <n-menu
+          :value="currentRoute"
           :collapsed="isNavbarCollapsed"
           :collapsed-width="75"
           :options="sidebarOptions"
