@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "preinstall": "pnpm install --no-frozen-lockfile",
     "start": "NODE_ENV=production node .output/server/index.mjs",
     "typecheck": "nuxt typecheck",
     "lint:fix": "eslint . --fix",
