@@ -15,7 +15,6 @@ useHead({ title: appName })
     <n-layout position="absolute" has-sider>
       <n-layout-sider
         v-if="isAuthenticated"
-        class="hidden md:block"
         collapse-mode="width"
         :collapsed-width="75"
         :collapsed="isNavbarCollapsed"
