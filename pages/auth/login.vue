@@ -31,7 +31,7 @@ async function submitHandler(e: MouseEvent) {
   }
   else {
     message.success('Logged in successfully')
-    return navigateTo(res?.url, { external: true })
+    return navigateTo('/')
   }
 }
 </script>
@@ -48,13 +48,13 @@ async function submitHandler(e: MouseEvent) {
     >
       <div class="flex flex-col gap-2 mt-6">
         <n-input
-          v-model="formData.email"
+          v-model:value="formData.email"
           label="Email"
           placeholder="Email"
           :disabled="isLoading"
         />
         <n-input
-          v-model="formData.password"
+          v-model:value="formData.password"
           label="Password"
           placeholder="Password"
           :disabled="isLoading"

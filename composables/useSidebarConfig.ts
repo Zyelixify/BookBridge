@@ -20,5 +20,13 @@ export default () => {
     },
   }))
 
-  return sidebarConfig
+  const footerConfig = computed((): MenuItem => ({
+    '/auth/logout': {
+      label: 'Logout',
+      icon: 'uil:sign-out-alt',
+      isRouterLink: true,
+    },
+  }))
+
+  return { sidebarConfig, footerConfig }
 }

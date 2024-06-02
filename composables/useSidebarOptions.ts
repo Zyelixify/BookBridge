@@ -2,8 +2,7 @@ import { RouterLink } from 'vue-router'
 import type { MenuOption } from 'naive-ui'
 
 export default () => {
-  const sidebarConfig = useSidebarConfig()
-
+  const { sidebarConfig, footerConfig } = useSidebarConfig()
   const makeSidebarOption = (path: string, config: MenuItemConfig): MenuOption => {
     const icon = () => {
       if (typeof config.icon === 'string') {
@@ -27,6 +26,15 @@ export default () => {
     })
     .flat(),
   )
+  const footerOptions = computed((): MenuOption[] => Object.entries(footerConfig.value)
+    .map(([path, config]) => {
+      const footerOption = makeSidebarOption(path, config)
+      const options = []
+      options.push(footerOption)
+      return options
+    })
+    .flat(),
+  )
 
-  return sidebarOptions
+  return { sidebarOptions, footerOptions }
 }

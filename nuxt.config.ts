@@ -13,5 +13,13 @@ export default defineNuxtConfig({
   },
   typescript: {
     shim: false
-  }
+  },
+  auth: {
+    provider: {
+      type: 'authjs',
+    },
+    globalAppMiddleware: {
+      isEnabled: true,
+    },
+  },
 })

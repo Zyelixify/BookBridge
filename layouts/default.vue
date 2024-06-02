@@ -4,7 +4,7 @@ const route = useRoute()
 const isAuthenticated = true // computed(() => status.value === 'authenticated')
 const isNavbarCollapsed = ref(false)
 
-const sidebarOptions = useSidebarOptions()
+const { sidebarOptions, footerOptions } = useSidebarOptions()
 const { appName, currentRoute } = useRouteTitle(computed(() => route.path))
 
 useHead({ title: appName })
@@ -16,6 +16,7 @@ useHead({ title: appName })
       <n-layout-sider
         v-if="isAuthenticated"
         collapse-mode="width"
+        class="flex justify-between py-14"
         :collapsed-width="75"
         :collapsed="isNavbarCollapsed"
         show-trigger="arrow-circle"
@@ -23,12 +24,34 @@ useHead({ title: appName })
         @collapse="isNavbarCollapsed = true"
         @expand="isNavbarCollapsed = false"
       >
-        <n-menu
-          :value="currentRoute"
-          :collapsed="isNavbarCollapsed"
-          :collapsed-width="75"
-          :options="sidebarOptions"
-        />
+        <div class="flex flex-col justify-between h-full">
+          <div class="shrink-0 ">
+            <div class="flex justify-center pt-5 pb-2">
+              <!-- logo -->
+            </div>
+            <n-menu
+              :options="sidebarOptions"
+              :value="currentRoute"
+              :collapsed="isNavbarCollapsed"
+              :collapsed-width="75"
+              :collapsed-icon-size="22"
+              :root-indent="20"
+              :indent="10"
+              accordion
+              :class="isNavbarCollapsed ? 'mt-10' : ''"
+            />
+          </div>
+          <n-menu
+            :options="footerOptions"
+            :value="currentRoute"
+            :collapsed="isNavbarCollapsed"
+            :collapsed-width="70"
+            :collapsed-icon-size="22"
+            :root-indent="20"
+            accordion
+            class="shrink-0 mb-4"
+          />
+        </div>
       </n-layout-sider>
       <n-layout-content>
         <div class="relative min-h-screen grow bg-white overflow-auto">
