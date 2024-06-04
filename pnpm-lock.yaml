@@ -58,6 +58,9 @@ devDependencies:
   '@sidebase/nuxt-auth':
     specifier: ^0.7.2
     version: 0.7.2(@opentelemetry/api@1.8.0)(next-auth@4.21.1)
+  '@types/bcrypt':
+    specifier: ^5.0.2
+    version: 5.0.2
   '@types/node':
     specifier: ^20.13.0
     version: 20.13.0
@@ -2313,6 +2316,12 @@ packages:
       '@tufjs/canonical-json': 2.0.0
       minimatch: 9.0.4
     dev: false
+
+  /@types/bcrypt@5.0.2:
+    resolution: {integrity: sha512-6atioO8Y75fNcbmj0G7UjI9lXN2pQ/IGJ2FWT4a/btd0Lk9lQalHLKhkgKVZ3r+spnmWUKfbMi1GEe9wyHQfNQ==}
+    dependencies:
+      '@types/node': 20.13.0
+    dev: true
 
   /@types/eslint@8.56.10:
     resolution: {integrity: sha512-Shavhk87gCtY2fhXDctcfS3e6FdxWkCx1iUZ9eEUbh7rTqlZT0/IzOkCOVt0fCjcFuZ9FPYfuezTBImfHCDBGQ==}
