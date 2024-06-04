@@ -37,39 +37,38 @@ async function submitHandler(e: MouseEvent) {
 </script>
 
 <template>
-  <n-card
-    title="Login"
-    header-class="bg-gray-200 !justify-center"
-    class="max-w-lg mx-auto"
-  >
-    <n-form
-      ref="formRef"
-      :model="formData"
-    >
-      <div class="flex flex-col gap-2 mt-6">
-        <n-input
-          v-model:value="formData.email"
-          label="Email"
-          placeholder="Email"
-          :disabled="isLoading"
-        />
-        <n-input
-          v-model:value="formData.password"
-          label="Password"
-          placeholder="Password"
-          :disabled="isLoading"
-          type="password"
-        />
-      </div>
-      <n-button
-        type="primary"
-        :loading="isLoading"
-        :disabled="isLoading"
-        class="w-full mt-4"
-        @click="submitHandler"
+  <div class="flex flex-grow flex-col items-center justify-center max-w-md gap-6">
+    <Logo />
+    <n-card title="Login" header-class="text-center mt-2">
+      <n-form
+        ref="formRef"
+        :model="formData"
       >
-        Login
-      </n-button>
-    </n-form>
-  </n-card>
+        <div class="flex flex-col gap-2 mt-6">
+          <n-input
+            v-model:value="formData.email"
+            label="Email"
+            placeholder="Email"
+            :disabled="isLoading"
+          />
+          <n-input
+            v-model:value="formData.password"
+            label="Password"
+            placeholder="Password"
+            :disabled="isLoading"
+            type="password"
+          />
+        </div>
+        <n-button
+          type="primary"
+          :loading="isLoading"
+          :disabled="isLoading"
+          class="w-full mt-4"
+          @click="submitHandler"
+        >
+          Login
+        </n-button>
+      </n-form>
+    </n-card>
+  </div>
 </template>

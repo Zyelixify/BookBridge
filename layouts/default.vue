@@ -27,7 +27,7 @@ useHead({ title: appName })
         <div class="flex flex-col justify-between h-full">
           <div class="shrink-0 ">
             <div class="flex justify-center pb-2">
-              <Logo :is-collapsed="isNavbarCollapsed" />
+              <Logo :shrink-logo="isNavbarCollapsed" />
             </div>
             <n-menu
               :options="sidebarOptions"
@@ -53,7 +53,7 @@ useHead({ title: appName })
         </div>
       </n-layout-sider>
       <n-layout-content>
-        <div class="relative min-h-screen grow bg-white overflow-auto">
+        <div class="relative min-h-screen grow overflow-auto">
           <slot />
         </div>
       </n-layout-content>

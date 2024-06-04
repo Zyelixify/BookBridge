@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ isCollapsed: boolean }>()
+defineProps<{ shrinkLogo?: boolean }>()
 </script>
 
 <template>
@@ -9,7 +9,7 @@ defineProps<{ isCollapsed: boolean }>()
       height: '100%',
       transition: '0.3s',
       width: 300,
-      transform: isCollapsed ? 'scale(0.3)' : 'scale(1)',
+      transform: shrinkLogo ? 'scale(0.3)' : 'scale(1)',
       fontFamily: 'Roboto',
     }"
   >
