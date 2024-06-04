@@ -1,12 +1,12 @@
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { z } from 'zod'
+import bcrypt from 'bcrypt'
 import { getPrisma } from '~/server/middleware/0.prisma'
 import { NuxtAuthHandler } from '#auth'
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
-  type: z.enum(['login', 'signup']),
 })
 export default NuxtAuthHandler({
   secret: process.env.AUTH_SECRET || 'testSecret',
@@ -22,18 +22,22 @@ export default NuxtAuthHandler({
         password: { label: 'Password', type: 'password', placeholder: 'Password' },
       },
       authorize: async (credentials: any) => {
-        const { email, password, type } = loginSchema.parse(credentials)
-        const user = type === 'login'
-          ? await getPrisma().account.findUniqueOrThrow({
-            where: { email },
-            select: { id: true, password: true },
-          })
-          : await getPrisma().account.create({
-            data: { email, password },
-            select: { id: true, password: true },
-          })
+        const { email, password } = loginSchema.parse(credentials)
+        let user = await getPrisma().account.findUnique({
+          where: { email },
+          select: { id: true, password: true },
+        })
 
-        if (user.password === password) {
+        if (!user) {
+          const hashedPassword = await bcrypt.hash(password, 10)
+          user = await getPrisma().account.create({
+            data: { email, password: hashedPassword },
+            select: { id: true, password: true },
+          })
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        if (isPasswordValid) {
           return { id: user.id }
         }
         return createError({ statusCode: 403, statusMessage: 'unauthorized' })

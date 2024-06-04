@@ -19,9 +19,9 @@ const formData = ref<{ email: string, password: string, type?: 'login' | 'signup
 const isLoading = ref<boolean>(false)
 const formRef = ref<null>(null)
 
-async function submitHandler(type: 'login' | 'signup') {
+async function submitHandler() {
   isLoading.value = true
-  const res = await signIn('credentials', { ...formData.value, type, redirect: false })
+  const res = await signIn('credentials', { ...formData.value, redirect: false })
 
   if (res?.error) {
     message.error(res.error)
@@ -37,7 +37,7 @@ async function submitHandler(type: 'login' | 'signup') {
 <template>
   <div class="flex flex-grow flex-col items-center justify-center max-w-md gap-6">
     <Logo />
-    <n-card title="Login" header-class="text-center mt-2">
+    <n-card title="Login | Signup" header-class="text-center mt-2">
       <n-form
         ref="formRef"
         :model="formData"
@@ -62,18 +62,9 @@ async function submitHandler(type: 'login' | 'signup') {
           :loading="isLoading"
           :disabled="isLoading"
           class="w-full mt-4"
-          @click="submitHandler('login')"
+          @click="submitHandler()"
         >
-          Login
-        </n-button>
-        <n-button
-          secondary
-          :loading="isLoading"
-          :disabled="isLoading"
-          class="w-full mt-2"
-          @click="submitHandler('signup')"
-        >
-          Signup
+          Submit
         </n-button>
       </n-form>
     </n-card>
