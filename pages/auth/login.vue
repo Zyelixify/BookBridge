@@ -8,10 +8,10 @@ definePageMeta({
 })
 useHead({ title: `Login` })
 
-const { signIn } = useAuth()
+const { signIn, } = useAuth()
 const message = useMessage()
 
-const formData = ref<{ email: string, password: string }>({
+const formData = ref<{ email: string, password: string, type?: 'login' | 'signup' }>({
   email: '',
   password: '',
 })
@@ -19,18 +19,16 @@ const formData = ref<{ email: string, password: string }>({
 const isLoading = ref<boolean>(false)
 const formRef = ref<null>(null)
 
-async function submitHandler(e: MouseEvent) {
-  e.preventDefault()
-
+async function submitHandler(type: 'login' | 'signup') {
   isLoading.value = true
-  const res = await signIn('credentials', { ...formData.value, redirect: false })
+  const res = await signIn('credentials', { ...formData.value, type, redirect: false })
 
   if (res?.error) {
     message.error(res.error)
     isLoading.value = false
   }
   else {
-    message.success('Logged in successfully')
+    message.success('Success')
     return navigateTo('/')
   }
 }
@@ -64,9 +62,18 @@ async function submitHandler(e: MouseEvent) {
           :loading="isLoading"
           :disabled="isLoading"
           class="w-full mt-4"
-          @click="submitHandler"
+          @click="submitHandler('login')"
         >
           Login
+        </n-button>
+        <n-button
+          secondary
+          :loading="isLoading"
+          :disabled="isLoading"
+          class="w-full mt-2"
+          @click="submitHandler('signup')"
+        >
+          Signup
         </n-button>
       </n-form>
     </n-card>

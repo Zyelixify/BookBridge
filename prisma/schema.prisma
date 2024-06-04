@@ -6,16 +6,17 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url = env("DATABASE_PRISMA_URL")
+  provider  = "sqlite"
+  url       = env("DATABASE_PRISMA_URL")
   directUrl = env("DATABASE_URL_NON_POOLING")
 }
+
 model Account {
-  id       String @id @default(uuid())
-  email    String @unique
-  name     String
+  id       String  @id @default(uuid())
+  email    String  @unique
+  name     String?
   password String
-  role     String @default("user")
+  role     String  @default("user")
 
   createdAt DateTime @default(now())
 }
