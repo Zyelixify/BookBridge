@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 const idObjectSchema = z.object({ id: z.string() })
+export const objectSchema = z.any().default({})
+export const querySchema = z.object({ where: objectSchema, select: objectSchema })
 
 // Account
 export const accountRoleSchema = z.enum(['admin', 'employee', 'user'])

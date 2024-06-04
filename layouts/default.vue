@@ -53,7 +53,7 @@ useHead({ title: appName })
         </div>
       </n-layout-sider>
       <n-layout-content>
-        <div class="relative min-h-screen grow overflow-auto">
+        <div class="relative min-h-screen grow overflow-auto bg-slate-100 flex items-center justify-center flex-col">
           <slot />
         </div>
       </n-layout-content>

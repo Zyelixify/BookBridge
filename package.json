@@ -24,6 +24,7 @@
     "nuxt-icon": "^0.6.10",
     "superjson": "^2.2.1",
     "trpc-nuxt": "^0.10.21",
+    "trpc-shield": "^0.4.4",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
     "zod": "^3.23.8"

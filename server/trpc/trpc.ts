@@ -11,7 +11,7 @@ import { initTRPC } from '@trpc/server'
 import superjson from 'superjson'
 import type { Context } from '~/server/trpc/context'
 
-const t = initTRPC.context<Context>().create({
+export const t = initTRPC.context<Context>().create({
   transformer: superjson
 })
 
@@ -19,5 +19,5 @@ const t = initTRPC.context<Context>().create({
  * Unprotected procedure
  */
 export const publicProcedure = t.procedure
-export const router = t.router
+export const createRouter = t.router
 export const middleware = t.middleware

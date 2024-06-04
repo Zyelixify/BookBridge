@@ -3,6 +3,7 @@ import { z } from 'zod'
 import bcrypt from 'bcrypt'
 import { getPrisma } from '~/server/middleware/0.prisma'
 import { NuxtAuthHandler } from '#auth'
+import 'next-auth'
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -53,16 +54,17 @@ export default NuxtAuthHandler({
     },
     session: async ({ session, token }) => {
       try {
-        const account = await getPrisma().account.findUniqueOrThrow({
+        const user = await getPrisma().account.findUniqueOrThrow({
           where: { id: z.string().parse(token.id) },
           select: {
+            id: true,
             role: true,
             email: true,
           },
         })
         return {
           ...session,
-          account
+          user
         }
       }
       catch (error) {
@@ -72,3 +74,12 @@ export default NuxtAuthHandler({
     },
   },
 })
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string
+      role: string
+      email: string
+    }
+  }
+}

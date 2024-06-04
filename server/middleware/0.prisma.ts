@@ -8,6 +8,7 @@ export function getPrisma() {
   }
   return prisma
 }
+export type ExtendedPrismaClient = ReturnType<typeof getPrisma>
 declare module 'h3' {
   interface H3EventContext {
     prisma: PrismaClient
