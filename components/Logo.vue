@@ -4,7 +4,7 @@ defineProps<{ shrinkLogo?: boolean }>()
 
 <template>
   <h2
-    class="block text-8xl text-green-400"
+    class="block text-8xl text-green-400 select-none"
     :style="{
       height: '100%',
       transition: '0.3s',
