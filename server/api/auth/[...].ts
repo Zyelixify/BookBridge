@@ -48,17 +48,22 @@ export default NuxtAuthHandler({
       return token
     },
     session: async ({ session, token }) => {
-      const account = await getPrisma().account.findUniqueOrThrow({
-        where: { id: z.string().parse(token.id) },
-        select: {
-          role: true,
-          email: true,
-        },
-      })
-
-      return {
-        ...session,
-        account
+      try {
+        const account = await getPrisma().account.findUniqueOrThrow({
+          where: { id: z.string().parse(token.id) },
+          select: {
+            role: true,
+            email: true,
+          },
+        })
+        return {
+          ...session,
+          account
+        }
+      }
+      catch (error) {
+        console.error(error)
+        throw error
       }
     },
   },
