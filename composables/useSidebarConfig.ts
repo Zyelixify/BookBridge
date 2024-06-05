@@ -18,6 +18,11 @@ export default () => {
       icon: 'uil:question-circle',
       isRouterLink: true,
     },
+    '/books': {
+      label: `Books`,
+      icon: 'uil:book-open',
+      isRouterLink: true,
+    },
   }))
 
   const footerConfig = computed((): MenuItem => ({
