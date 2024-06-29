@@ -10,17 +10,12 @@ export default () => {
   const sidebarConfig = computed((): MenuItem => ({
     '/': {
       label: `Home`,
-      icon: 'uil:home',
-      isRouterLink: true,
-    },
-    '/about': {
-      label: `About`,
-      icon: 'uil:question-circle',
+      icon: 'material-symbols:home-outline-rounded',
       isRouterLink: true,
     },
     '/books': {
       label: `Books`,
-      icon: 'uil:book-open',
+      icon: 'material-symbols:book-2-outline-rounded',
       isRouterLink: true,
     },
   }))
@@ -28,7 +23,12 @@ export default () => {
   const footerConfig = computed((): MenuItem => ({
     '/auth/logout': {
       label: 'Logout',
-      icon: 'uil:sign-out-alt',
+      icon: 'material-symbols:logout-rounded',
+      isRouterLink: true,
+    },
+    '/about': {
+      label: `About`,
+      icon: 'material-symbols:info-outline',
       isRouterLink: true,
     },
   }))

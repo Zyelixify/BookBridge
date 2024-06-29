@@ -4,7 +4,9 @@ const books = await $trpc.book.findManyBook.query({})
 </script>
 
 <template>
-  <n-card class="max-w-2xl">
-    <pre> {{ books }}</pre>
-  </n-card>
+  <Page title="Books" icon="material-symbols:book-2-outline-rounded">
+    <n-card>
+      <pre> {{ books }}</pre>
+    </n-card>
+  </Page>
 </template>
