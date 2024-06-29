@@ -18,20 +18,27 @@ model Account {
   password String
   role     String  @default("user")
 
+  reviews    Review[]
+  ownerships BookOwnership[]
+
   createdAt DateTime @default(now())
 }
 
 model Book {
   id          String  @id @default(uuid())
+  isbn        String  @unique
   title       String
   author      String
   description String?
   image       String?
   price       Float
 
-  status String    @default("available")
-  groups Group[]
-  tags   BookTag[]
+  status     String          @default("available")
+  rating     Float           @default(0)
+  reviews    Review[]
+  groups     Group[]
+  tags       BookTag[]
+  ownerships BookOwnership[]
 
   publishedAt DateTime
   createdAt   DateTime @default(now())
@@ -47,4 +54,33 @@ model BookTag {
   id    String @id @default(uuid())
   name  String
   books Book[]
+}
+
+model Review {
+  id        String  @id @default(uuid())
+  content   String
+  recommend Boolean
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+  book      Book    @relation(fields: [bookId], references: [id])
+  bookId    String
+
+  createdAt DateTime @default(now())
+}
+
+model BookOwnership {
+  id    String @id @default(uuid())
+  state String
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+  book      Book    @relation(fields: [bookId], references: [id])
+  bookId    String
+
+  dateCreated  DateTime  @default(now())
+  dateReceived DateTime?
+
+  expiresAt    DateTime?
+  dateReturned DateTime?
 }
