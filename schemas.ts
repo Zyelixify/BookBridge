@@ -16,6 +16,7 @@ export const updateAccountSchema = createAccountSchema.merge(idObjectSchema)
 export const bookStatusSchema = z.enum(['available', 'borrowed', 'lost'])
 export const bookTagSchema = z.enum(['fiction', 'non-fiction', 'biography'])
 export const createBookSchema = z.object({
+  isbn: z.string(),
   title: z.string(),
   author: z.string(),
   description: z.string().optional(),

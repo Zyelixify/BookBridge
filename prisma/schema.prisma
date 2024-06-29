@@ -26,7 +26,7 @@ model Account {
 
 model Book {
   id          String  @id @default(uuid())
-  isbn        String  @unique
+  isbn        String
   title       String
   author      String
   description String?
