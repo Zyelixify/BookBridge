@@ -29,7 +29,7 @@ async function submitHandler() {
   }
   else {
     message.success('Success')
-    return navigateTo('/')
+    navigateTo('/')
   }
 }
 </script>

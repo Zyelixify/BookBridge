@@ -19,8 +19,8 @@ export default NuxtAuthHandler({
     CredentialsProvider.default({
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'email', placeholder: 'Email' },
-        password: { label: 'Password', type: 'password', placeholder: 'Password' },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials: any) => {
         const { email, password } = loginSchema.parse(credentials)
