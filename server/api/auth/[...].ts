@@ -41,7 +41,7 @@ export default NuxtAuthHandler({
         if (isPasswordValid) {
           return { id: user.id }
         }
-        return createError({ statusCode: 403, statusMessage: 'unauthorized' })
+        return null
       },
     }),
   ],

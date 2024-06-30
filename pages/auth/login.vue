@@ -24,7 +24,7 @@ async function submitHandler() {
   const res = await signIn('credentials', { ...formData.value, redirect: false })
 
   if (res?.error) {
-    message.error(res.error)
+    message.error('Incorrect credentials, please try again.')
     isLoading.value = false
   }
   else {
