@@ -9,7 +9,6 @@ export default defineNuxtConfig({
   },
   plugins: [
     '~/plugins/trpcClient.ts',
-    '~/plugins/analytics.client.ts',
   ],
   modules: [
     '@nuxtjs/tailwindcss',
