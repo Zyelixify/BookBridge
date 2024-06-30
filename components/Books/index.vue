@@ -6,12 +6,15 @@ const { taken, hasMore, countIncrement } = useInfiniteScroll(count, pageSize)
 const books = ref(data)
 const drawerOpen = ref(false)
 const selectedBook = ref<typeof data[number]>()
+const isLoading = ref(false)
 
 async function fetchMoreBooks() {
   if (hasMore.value) {
+    isLoading.value = true
     const { data } = await $trpc.book.findManyBook.query({ take: pageSize, skip: taken.value })
     books.value = [...books.value, ...data]
     countIncrement(data!.length)
+    isLoading.value = false
   }
 }
 
@@ -54,6 +57,10 @@ function handleOpenDrawer(book: typeof data[number]) {
           </div>
         </n-list-item>
       </n-list>
+      <n-card v-if="isLoading" class="w-full flex justify-center items-center p-4">
+        <n-spin />
+      </n-card>
+      <n-alert v-else-if="!hasMore" class="w-full flex justify-center p-4" title="No more books to show" />
     </n-infinite-scroll>
     <n-drawer v-model:show="drawerOpen" :width="500" placement="right">
       <n-drawer-content v-if="selectedBook" :title="selectedBook.title" body-content-class="flex flex-col items-center">
