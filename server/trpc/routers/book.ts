@@ -67,12 +67,6 @@ async function loadBooks(ctx: Context) {
       isbn: isbn || `N/A`,
       title: book.title,
       author: book.authors[0]?.name || 'Unknown Author',
-      tags: {
-        connectOrCreate: book.subject?.map((name: string) => ({
-          where: { name },
-          create: { name },
-        })),
-      },
       image: book.cover_id ? `http://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg` : null,
       price: Math.random() * 100,
       publishedAt: new Date(`${book.first_publish_year}-01-01`),
@@ -82,24 +76,7 @@ async function loadBooks(ctx: Context) {
     }
   })
 
-  // Utility function to chunk the array
-  const chunkSize = 10 // Adjust based on your connection pool size and load
-  const chunks = chunkArray(formattedBooks, chunkSize)
-
-  for (const chunk of chunks) {
-    await ctx.prisma.$transaction(
-      chunk.map((book: any) => ctx.prisma.book.create({ data: book }))
-    )
-  }
-}
-
-// Utility function to chunk an array into smaller arrays of a specified size
-function chunkArray(array: any[], size: number): any[][] {
-  return array.reduce((acc, val, i) => {
-    const idx = Math.floor(i / size)
-    const page = acc[idx] || (acc[idx] = [])
-    page.push(val)
-
-    return acc
-  }, [])
+  await ctx.prisma.book.createMany({
+    data: formattedBooks
+  })
 }
