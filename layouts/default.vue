@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { SpeedInsights } from '@vercel/speed-insights/nuxt'
+
 const route = useRoute()
 // const { status } = useAuth()
 const isAuthenticated = true // computed(() => status.value === 'authenticated')
@@ -59,6 +61,5 @@ useHead({ title: appName })
       </n-layout-content>
     </n-layout>
   </div>
-  <Analytics />
   <SpeedInsights />
 </template>
