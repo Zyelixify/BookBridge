@@ -59,4 +59,6 @@ useHead({ title: appName })
       </n-layout-content>
     </n-layout>
   </div>
+  <Analytics />
+  <SpeedInsights />
 </template>
