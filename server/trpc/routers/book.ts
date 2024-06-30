@@ -11,20 +11,9 @@ const defaultSelect = {
   publishedAt: true,
   status: true,
   price: true,
-  description: true,
   image: true,
-  tags: {
-    select: {
-      id: true,
-      name: true,
-    }
-  },
-  groups: {
-    select: {
-      id: true,
-      name: true,
-    }
-  },
+  tags: { select: { id: true, name: true } },
+  groups: { select: { id: true, name: true } },
   createdAt: true,
 }
 
@@ -39,23 +28,21 @@ export const router = createRouter({
   }),
   findOneBook: shieldedProcedure.input(z.any(z.object({}))).query(({ input, ctx }) => ctx.prisma.book.findUniqueOrThrow({ select: defaultSelect, ...input })),
   createBook: shieldedProcedure.input(createBookSchema).mutation(({ input, ctx }) => {
-    const { groups, tags, ...data } = input
+    const { groups, ...data } = input
     return ctx.prisma.book.create({
       data: {
         ...data,
         groups: { connect: groups?.map(id => ({ id })) },
-        tags: { connect: tags?.map(id => ({ id })) },
       }
     })
   }),
   updateBook: shieldedProcedure.input(updateBookSchema).mutation(({ input, ctx }) => {
-    const { id, groups, tags, ...data } = input
+    const { id, groups, ...data } = input
     return ctx.prisma.book.update({
       where: { id },
       data: {
         ...data,
         groups: { set: groups?.map(id => ({ id })) },
-        tags: { set: tags?.map(id => ({ id })) }
       }
     })
   }),
@@ -65,7 +52,7 @@ async function loadBooks(ctx: Context) {
   const existingCount = await ctx.prisma.book.count()
   if (existingCount > 0) { return }
 
-  const response = await fetch('http://openlibrary.org/subjects/sciencemathematics.json?limit=51')
+  const response = await fetch('http://openlibrary.org/subjects/fiction.json?limit=51')
   const data = await response.json()
   const booksData = data.works
 
@@ -76,10 +63,15 @@ async function loadBooks(ctx: Context) {
     const isbn = isbn13 || isbn10 // Prefer ISBN 13 over ISBN 10
 
     return {
-      isbn: isbn || `none`, // Use 'N/A' if no ISBN is available
+      isbn: isbn || `N/A`, // Use 'N/A' if no ISBN is available
       title: book.title,
       author: book.authors[0]?.name || 'Unknown Author',
-      description: book.description ? book.description.value : null,
+      tags: {
+        connectOrCreate: book.subject?.map((name: string) => ({
+          where: { name },
+          create: { name },
+        })),
+      },
       image: book.cover_id ? `http://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg` : null,
       price: Math.random() * 100, // Generating a random price.
       publishedAt: new Date(`${book.first_publish_year}-01-01`),
@@ -89,7 +81,5 @@ async function loadBooks(ctx: Context) {
     }
   })
 
-  await ctx.prisma.book.createMany({
-    data: formattedBooks,
-  })
+  ctx.prisma.$transaction(formattedBooks.map((book: any) => ctx.prisma.book.create({ data: book })))
 }

@@ -29,7 +29,6 @@ model Book {
   isbn        String
   title       String
   author      String
-  description String?
   image       String?
   price       Float
 
@@ -52,7 +51,7 @@ model Group {
 
 model BookTag {
   id    String @id @default(uuid())
-  name  String
+  name  String @unique
   books Book[]
 }
 

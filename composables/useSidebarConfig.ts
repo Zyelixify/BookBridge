@@ -9,8 +9,8 @@ type MenuItem = Record<string, MenuItemConfig>
 export default () => {
   const sidebarConfig = computed((): MenuItem => ({
     '/': {
-      label: `Home`,
-      icon: 'material-symbols:home-outline-rounded',
+      label: `Dashboard`,
+      icon: 'material-symbols:dashboard-outline',
       isRouterLink: true,
     },
     '/books': {
