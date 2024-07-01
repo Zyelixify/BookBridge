@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-const idObjectSchema = z.object({ id: z.string() })
 export const objectSchema = z.any().default({})
 export const querySchema = z.object({ where: objectSchema, select: objectSchema })
 
@@ -10,7 +9,7 @@ export const createAccountSchema = z.object({
   email: z.string().email(),
   role: accountRoleSchema,
 })
-export const updateAccountSchema = createAccountSchema.merge(idObjectSchema)
+export const updateAccountSchema = z.any(z.object({}))
 
 // Book
 export const bookStatusSchema = z.enum(['available', 'borrowed', 'lost'])
@@ -25,4 +24,17 @@ export const createBookSchema = z.object({
   groups: z.array(z.string()).optional(),
   publishedAt: z.date(),
 })
-export const updateBookSchema = createBookSchema.merge(idObjectSchema)
+export const updateBookSchema = z.any(z.object({}))
+
+// Book Ownership
+export const bookOwnershipStateSchema = z.enum(['active', 'returned', 'lost'])
+export const createBookOwnershipSchema = z.object({
+  bookId: z.string(),
+  accountId: z.string(),
+  state: bookOwnershipStateSchema.default('active'),
+  dateCreated: z.date().default(new Date()),
+  dateReceived: z.date().optional(),
+  expiresAt: z.date().optional(),
+  dateReturned: z.date().optional(),
+})
+export const updateBookOwnershipSchema = z.any(z.object({}))

@@ -1,10 +1,12 @@
 import { createRouter } from '../trpc'
 import { router as account } from './account'
 import { router as book } from './book'
+import { router as bookOwnership } from './bookOwnerships'
 
 export const appRouter = createRouter({
   account,
-  book
+  book,
+  bookOwnership,
 })
 
 // export type definition of API

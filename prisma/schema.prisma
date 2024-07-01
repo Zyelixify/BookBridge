@@ -20,6 +20,8 @@ model Account {
 
   reviews    Review[]
   ownerships BookOwnership[]
+  savedBooks Book[]
+  events     Event[]
 
   createdAt DateTime @default(now())
 }
@@ -35,18 +37,13 @@ model Book {
   status     String          @default("available")
   rating     Float           @default(0)
   reviews    Review[]
-  groups     Group[]
   tags       BookTag[]
   ownerships BookOwnership[]
+  savedBy    Account[]
+  events     Event[]
 
   publishedAt DateTime
   createdAt   DateTime @default(now())
-}
-
-model Group {
-  id    String @id @default(uuid())
-  name  String
-  books Book[]
 }
 
 model BookTag {
@@ -70,7 +67,7 @@ model Review {
 
 model BookOwnership {
   id    String @id @default(uuid())
-  state String
+  state String @default("active")
 
   account   Account @relation(fields: [accountId], references: [id])
   accountId String
@@ -82,4 +79,17 @@ model BookOwnership {
 
   expiresAt    DateTime?
   dateReturned DateTime?
+}
+
+model Event {
+  id        String  @id @default(uuid())
+  type      String
+  message   String
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+  book      Book?    @relation(fields: [bookId], references: [id])
+  bookId    String?
+
+  createdAt DateTime @default(now())
 }

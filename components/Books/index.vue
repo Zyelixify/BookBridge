@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { data: session } = useAuth()
 const { $trpc } = useNuxtApp()
 const pageSize = 9
 const { data, count } = await $trpc.book.findManyBook.query({ take: pageSize })
@@ -7,6 +8,7 @@ const books = ref(data)
 const drawerOpen = ref(false)
 const selectedBook = ref<typeof data[number]>()
 const isLoading = ref(false)
+const isOrdering = ref(false)
 
 async function fetchMoreBooks() {
   if (hasMore.value) {
@@ -22,11 +24,25 @@ function handleOpenDrawer(book: typeof data[number]) {
   selectedBook.value = book
   drawerOpen.value = true
 }
+
+async function handleOrder(bookId: string) {
+  isOrdering.value = true
+  const accountId = session.value?.user?.id
+  if (!accountId) { return }
+  await $trpc.bookOwnership.createBook.mutate({ accountId, bookId })
+  isOrdering.value = false
+}
+
+async function handleSave(bookId: string) {
+  const accountId = session.value?.user?.id
+  if (!accountId) { return }
+  await $trpc.book.updateBook.mutate({ where: { id: bookId }, data: { savedBy: { connect: { id: accountId } } } })
+}
 </script>
 
 <template>
   <Page title="Books" icon="material-symbols:book-2-outline-rounded">
-    <n-infinite-scroll class="h-[80vh]" :distance="10" @load="fetchMoreBooks">
+    <n-infinite-scroll class="h-full" :distance="10" @load="fetchMoreBooks">
       <n-list hoverable clickable class="flex flex-wrap">
         <n-list-item v-for="book in books" :key="book.isbn" class="flex-auto w-full sm:w-1/2 lg:w-1/3">
           <div :title="book.title" class="flex flex-row gap-4 p-4 h-full">
@@ -82,11 +98,11 @@ function handleOpenDrawer(book: typeof data[number]) {
           ${{ selectedBook.price.toFixed(2) }}
           <n-divider />
           <div class="flex flex-col flex-grow gap-2 w-full">
-            <n-button size="medium" type="primary">
+            <n-button size="medium" type="primary" :is-loading="isOrdering" @click="handleOrder(selectedBook.id)">
               Order
             </n-button>
-            <n-button size="medium">
-              Add to list
+            <n-button size="medium" @click="handleSave(selectedBook.id)">
+              Save
             </n-button>
           </div>
         </div>

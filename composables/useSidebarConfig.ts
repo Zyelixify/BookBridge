@@ -26,11 +26,6 @@ export default () => {
       icon: 'material-symbols:logout-rounded',
       isRouterLink: true,
     },
-    '/about': {
-      label: `About`,
-      icon: 'material-symbols:info-outline',
-      isRouterLink: true,
-    },
   }))
 
   return { sidebarConfig, footerConfig }

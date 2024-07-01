@@ -4,45 +4,32 @@ import type { Context } from '../context'
 import { createRouter } from '~/server/trpc/trpc'
 import { createBookSchema, updateBookSchema } from '~/schemas'
 
-const defaultSelect = {
-  id: true,
-  title: true,
-  author: true,
-  publishedAt: true,
-  status: true,
-  price: true,
-  image: true,
-  tags: { select: { id: true, name: true } },
-  groups: { select: { id: true, name: true } },
-  createdAt: true,
+const defaultInclude = {
+  tags: true
 }
 
 export const router = createRouter({
   findManyBook: shieldedProcedure.input(z.any(z.object({}))).query(async ({ input, ctx }) => {
     await loadBooks(ctx)
     const [data, count] = await ctx.prisma.$transaction([
-      ctx.prisma.book.findMany({ ...input, select: defaultSelect }),
+      ctx.prisma.book.findMany({ ...input, include: defaultInclude }),
       ctx.prisma.book.count({ where: input.where }),
     ])
     return { data, count }
   }),
-  findOneBook: shieldedProcedure.input(z.any(z.object({}))).query(({ input, ctx }) => ctx.prisma.book.findUniqueOrThrow({ select: defaultSelect, ...input })),
+  findOneBook: shieldedProcedure.input(z.any(z.object({}))).query(({ input, ctx }) => ctx.prisma.book.findUniqueOrThrow({ include: defaultInclude, ...input })),
   createBook: shieldedProcedure.input(createBookSchema).mutation(({ input, ctx }) => {
-    const { groups, ...data } = input
     return ctx.prisma.book.create({
       data: {
-        ...data,
-        groups: { connect: groups?.map(id => ({ id })) },
+        ...input,
       }
     })
   }),
   updateBook: shieldedProcedure.input(updateBookSchema).mutation(({ input, ctx }) => {
-    const { id, groups, ...data } = input
     return ctx.prisma.book.update({
-      where: { id },
+      where: { id: input.id },
       data: {
-        ...data,
-        groups: { set: groups?.map(id => ({ id })) },
+        ...input
       }
     })
   }),
