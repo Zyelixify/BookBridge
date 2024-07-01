@@ -26,12 +26,7 @@ export const router = createRouter({
     })
   }),
   updateBook: shieldedProcedure.input(updateBookSchema).mutation(({ input, ctx }) => {
-    return ctx.prisma.book.update({
-      where: { id: input.id },
-      data: {
-        ...input
-      }
-    })
+    return ctx.prisma.book.update(input)
   }),
 })
 

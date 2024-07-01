@@ -98,7 +98,7 @@ async function handleSave(bookId: string) {
           ${{ selectedBook.price.toFixed(2) }}
           <n-divider />
           <div class="flex flex-col flex-grow gap-2 w-full">
-            <n-button size="medium" type="primary" :is-loading="isOrdering" @click="handleOrder(selectedBook.id)">
+            <n-button strong size="medium" type="primary" :is-loading="isOrdering" @click="handleOrder(selectedBook.id)">
               Order
             </n-button>
             <n-button size="medium" @click="handleSave(selectedBook.id)">
