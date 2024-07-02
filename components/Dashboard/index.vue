@@ -113,14 +113,14 @@ async function openReviewDrawer(book: typeof savedBooks[number]) {
           </p>
           <n-divider />
           <div class="flex flex-col gap-2 py-2">
-            <n-input v-model="reviewData.content" type="textarea" placeholder="Write your review here..." />
+            <n-input type="textarea" placeholder="Write your review here..." @update:value="value => reviewData.content = value" />
             <n-switch
-              v-model="reviewData.recommend"
               :round="false"
               :rail-style="({ checked }) => (checked
                 ? {}
                 : { background: '#d03050', boxShadow: '0 0 0 2px #d0305040' }
               )"
+              @update:value="value => reviewData.recommend = value"
             >
               <template #checked>
                 Recommended
