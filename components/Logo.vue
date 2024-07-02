@@ -4,7 +4,7 @@ defineProps<{ shrinkLogo?: boolean }>()
 
 <template>
   <h2
-    class="block text-6xl text-center align-baseline text-green-400 select-none"
+    class="block text-6xl align-baseline text-center text-green-400 select-none"
     :style="{
       height: '100%',
       transition: '0.3s',
@@ -13,7 +13,7 @@ defineProps<{ shrinkLogo?: boolean }>()
       fontFamily: 'Roboto',
     }"
   >
-    BOOK
-    BRIDGE
+    Book
+    Bridge
   </h2>
 </template>

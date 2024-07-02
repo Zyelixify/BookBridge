@@ -38,3 +38,11 @@ export const createBookOwnershipSchema = z.object({
   dateReturned: z.date().optional(),
 })
 export const updateBookOwnershipSchema = z.any(z.object({}))
+
+// Review
+export const createReviewSchema = z.object({
+  bookId: z.string(),
+  accountId: z.string(),
+  recommend: z.boolean(),
+  content: z.string(),
+})

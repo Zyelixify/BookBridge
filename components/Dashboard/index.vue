@@ -3,9 +3,26 @@ const { $trpc } = useNuxtApp()
 const { data: session } = useAuth()
 
 const self = await $trpc.account.findOneAccount.query({ where: { id: session.value?.user?.id } })
-const ownerships = await $trpc.bookOwnership.findManyBook.query({ where: { accountId: session.value?.user?.id } })
+const ownerships = await $trpc.bookOwnership.findManyBookOwnership.query({ where: { accountId: self.id } })
 const ownedBooks = ownerships.map((ownership: any) => ownership.book)
-const { data: savedBooks } = await $trpc.book.findManyBook.query({ where: { savedBy: { some: { id: session.value?.user?.id } } } })
+const { data: savedBooks } = await $trpc.book.findManyBook.query({ where: { savedBy: { some: { id: self.id } } } })
+
+const isReviewDrawerOpen = ref(false)
+const reviewBook = ref<typeof savedBooks[number]>()
+const reviewData = ref({ content: '', recommend: false })
+
+async function handleReview() {
+  if (!reviewBook.value) { return }
+  const accountId = self.id
+  const bookId = reviewBook.value.id
+  await $trpc.review.createReview.mutate({ accountId, bookId, ...reviewData.value })
+  isReviewDrawerOpen.value = false
+}
+
+async function openReviewDrawer(book: typeof savedBooks[number]) {
+  reviewBook.value = book
+  isReviewDrawerOpen.value = true
+}
 </script>
 
 <template>
@@ -28,11 +45,9 @@ const { data: savedBooks } = await $trpc.book.findManyBook.query({ where: { save
             </p>
           </n-card>
         </n-card>
-        <n-card>
-          <n-empty description="No notifications" />
-        </n-card>
+        <DashboardNotifications :account-id="self.id" />
         <n-card title="Saved Books">
-          <n-list hoverable clickable class="flex flex-wrap gap-4">
+          <n-list hoverable clickable class="flex flex-wrap gap-2 justify-between">
             <n-list-item v-for="book in savedBooks" :key="book.isbn" class="w-48 h-64 border border-gray-300 rounded-sm overflow-hidden">
               <n-image
                 v-if="book.image"
@@ -57,7 +72,7 @@ const { data: savedBooks } = await $trpc.book.findManyBook.query({ where: { save
                     :src="book.image"
                   />
                 </div>
-                <div class="w-2/3 flex flex-col justify-between">
+                <div class="w-2/3 flex flex-col justify-between flex-grow">
                   <div>
                     <h3 class="text-lg font-semibold">
                       {{ book.title }}
@@ -67,10 +82,7 @@ const { data: savedBooks } = await $trpc.book.findManyBook.query({ where: { save
                     </p>
                   </div>
                   <div class="flex flex-row-reverse gap-2">
-                    <n-button size="medium" type="primary">
-                      Show more...
-                    </n-button>
-                    <n-button size="medium">
+                    <n-button size="medium" type="primary" @click="openReviewDrawer(book)">
                       Review
                     </n-button>
                   </div>
@@ -81,5 +93,50 @@ const { data: savedBooks } = await $trpc.book.findManyBook.query({ where: { save
         </n-card>
       </div>
     </div>
+
+    <n-drawer v-model:show="isReviewDrawerOpen" :width="400" placement="right">
+      <n-drawer-content v-if="reviewBook" :title="reviewBook.title" body-content-class="flex flex-col items-center">
+        <div class="w-64 h-96 border border-gray-300 rounded-sm overflow-hidden">
+          <n-image
+            v-if="reviewBook.image"
+            lazy
+            class="w-full h-full object-contain mx-auto"
+            :src="reviewBook.image"
+          />
+        </div>
+        <div class="w-2/3 flex flex-col flex-grow py-8">
+          <h3 class="text-lg font-semibold">
+            {{ reviewBook.title }}
+          </h3>
+          <p class="text-sm text-gray-500">
+            {{ reviewBook.author }}, {{ reviewBook.publishedAt.getFullYear() }}
+          </p>
+          <n-divider />
+          <div class="flex flex-col gap-2 py-2">
+            <n-input v-model="reviewData.content" type="textarea" placeholder="Write your review here..." />
+            <n-switch
+              v-model="reviewData.recommend"
+              :round="false"
+              :rail-style="({ checked }) => (checked
+                ? {}
+                : { background: '#d03050', boxShadow: '0 0 0 2px #d0305040' }
+              )"
+            >
+              <template #checked>
+                Recommended
+              </template>
+              <template #unchecked>
+                Not recommended
+              </template>
+            </n-switch>
+          </div>
+          <div class="flex flex-col flex-grow gap-2 w-full">
+            <n-button strong size="medium" type="primary" @click="handleReview()">
+              Submit review
+            </n-button>
+          </div>
+        </div>
+      </n-drawer-content>
+    </n-drawer>
   </Page>
 </template>

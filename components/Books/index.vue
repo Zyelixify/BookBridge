@@ -29,7 +29,7 @@ async function handleOrder(bookId: string) {
   isOrdering.value = true
   const accountId = session.value?.user?.id
   if (!accountId) { return }
-  await $trpc.bookOwnership.createBook.mutate({ accountId, bookId })
+  await $trpc.bookOwnership.createBookOwnership.mutate({ accountId, bookId })
   isOrdering.value = false
 }
 
@@ -78,7 +78,7 @@ async function handleSave(bookId: string) {
       </n-card>
       <n-alert v-else-if="!hasMore" class="w-full flex justify-center p-4" title="No more books to show" />
     </n-infinite-scroll>
-    <n-drawer v-model:show="drawerOpen" :width="500" placement="right">
+    <n-drawer v-model:show="drawerOpen" :width="400" placement="right">
       <n-drawer-content v-if="selectedBook" :title="selectedBook.title" body-content-class="flex flex-col items-center">
         <div class="w-64 h-96 border border-gray-300 rounded-sm overflow-hidden">
           <n-image
@@ -99,7 +99,7 @@ async function handleSave(bookId: string) {
           <n-divider />
           <div class="flex flex-col flex-grow gap-2 w-full">
             <n-button strong size="medium" type="primary" :is-loading="isOrdering" @click="handleOrder(selectedBook.id)">
-              Order
+              Reserve Book
             </n-button>
             <n-button size="medium" @click="handleSave(selectedBook.id)">
               Save
