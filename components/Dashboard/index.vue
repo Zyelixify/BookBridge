@@ -8,15 +8,18 @@ const ownedBooks = ownerships.map((ownership: any) => ownership.book)
 const { data: savedBooks } = await $trpc.book.findManyBook.query({ where: { savedBy: { some: { id: self.id } } } })
 
 const isReviewDrawerOpen = ref(false)
+const reviewLoading = ref(false)
 const reviewBook = ref<typeof savedBooks[number]>()
 const reviewData = ref({ content: '', recommend: false })
 
 async function handleReview() {
   if (!reviewBook.value) { return }
+  reviewLoading.value = true
   const accountId = self.id
   const bookId = reviewBook.value.id
   await $trpc.review.createReview.mutate({ accountId, bookId, ...reviewData.value })
   isReviewDrawerOpen.value = false
+  reviewLoading.value = false
 }
 
 async function openReviewDrawer(book: typeof savedBooks[number]) {
@@ -34,7 +37,13 @@ async function openReviewDrawer(book: typeof savedBooks[number]) {
             Hello {{ self.name }}! This is your dashboard.<br>
             You can view your account details, recent notifications, updates, and orders here.
           </p>
-          <n-card title="Account details:" content-class="sm:flex justify-between" class="mt-4 p-2 bg-green-300 rounded-lg shadow select-none">
+          <n-card content-class="sm:flex justify-between" class="mt-4 p-2 bg-green-300 rounded-lg shadow select-none">
+            <template #header>
+              <div class="flex gap-1">
+                <Icon name="material-symbols:account-box-outline" size="24" />
+                <h1>Account details:</h1>
+              </div>
+            </template>
             <p class="text-sm">
               Name: {{ self.name }}<br>
               Role: {{ self.role.toLocaleUpperCase() }}
@@ -46,8 +55,8 @@ async function openReviewDrawer(book: typeof savedBooks[number]) {
           </n-card>
         </n-card>
         <DashboardNotifications :account-id="self.id" />
-        <n-card title="Saved Books">
-          <n-list hoverable clickable class="flex flex-wrap gap-2 justify-between">
+        <n-card title="Saved Books" class="min-h-72">
+          <n-list v-if="savedBooks.length" hoverable clickable class="flex flex-wrap gap-2 justify-between">
             <n-list-item v-for="book in savedBooks" :key="book.isbn" class="w-48 h-64 border border-gray-300 rounded-sm overflow-hidden">
               <n-image
                 v-if="book.image"
@@ -57,11 +66,16 @@ async function openReviewDrawer(book: typeof savedBooks[number]) {
               />
             </n-list-item>
           </n-list>
+          <n-empty v-else>
+            <p>
+              You haven't saved any books yet.
+            </p>
+          </n-empty>
         </n-card>
       </div>
       <div class="lg:w-1/2 ">
         <n-card class="min-h-full" title="Owned Books">
-          <n-list hoverable clickable class="flex flex-col">
+          <n-list v-if="ownedBooks.length" hoverable clickable class="flex flex-col">
             <n-list-item v-for="book in ownedBooks" :key="book.isbn" class="flex-auto w-full">
               <div :title="book.title" class="flex flex-row gap-4 p-4 pt-0 h-full">
                 <div class="w-32 h-48 border border-gray-300 rounded-sm overflow-hidden">
@@ -83,6 +97,9 @@ async function openReviewDrawer(book: typeof savedBooks[number]) {
                   </div>
                   <div class="flex flex-row-reverse gap-2">
                     <n-button size="medium" type="primary" @click="openReviewDrawer(book)">
+                      <template #icon>
+                        <Icon name="material-symbols:add-notes-outline-rounded" />
+                      </template>
                       Review
                     </n-button>
                   </div>
@@ -90,6 +107,11 @@ async function openReviewDrawer(book: typeof savedBooks[number]) {
               </div>
             </n-list-item>
           </n-list>
+          <n-empty v-else>
+            <p>
+              You don't own any books yet. Browse our books tab to find your next read!
+            </p>
+          </n-empty>
         </n-card>
       </div>
     </div>
@@ -115,6 +137,7 @@ async function openReviewDrawer(book: typeof savedBooks[number]) {
           <div class="flex flex-col gap-2 py-2">
             <n-input type="textarea" placeholder="Write your review here..." @update:value="value => reviewData.content = value" />
             <n-switch
+              class="w-full"
               :round="false"
               :rail-style="({ checked }) => (checked
                 ? {}
@@ -131,7 +154,10 @@ async function openReviewDrawer(book: typeof savedBooks[number]) {
             </n-switch>
           </div>
           <div class="flex flex-col flex-grow gap-2 w-full">
-            <n-button strong size="medium" type="primary" @click="handleReview()">
+            <n-button strong size="medium" type="primary" :loading="reviewLoading" @click="handleReview()">
+              <template #icon>
+                <Icon name="material-symbols:export-notes-outline-rounded" />
+              </template>
               Submit review
             </n-button>
           </div>

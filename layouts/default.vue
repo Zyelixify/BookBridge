@@ -1,8 +1,15 @@
 <script setup lang="ts">
 const route = useRoute()
-// const { status } = useAuth()
-const isAuthenticated = true // computed(() => status.value === 'authenticated')
+const { status } = useAuth()
+const isAuthenticated = computed(() => status.value === 'authenticated')
 const isNavbarCollapsed = ref(false)
+
+const updateNavbarCollapse = () => isNavbarCollapsed.value = window.innerWidth < 768
+onMounted(() => {
+  isNavbarCollapsed.value = window.innerWidth < 768
+  window.addEventListener('resize', updateNavbarCollapse)
+})
+onUnmounted(() => window.removeEventListener('resize', updateNavbarCollapse))
 
 const { sidebarOptions, footerOptions } = useSidebarOptions()
 const { appName, currentRoute } = useRouteTitle(computed(() => route.path))
@@ -19,7 +26,6 @@ useHead({ title: appName })
         class="flex justify-between py-14"
         :collapsed-width="75"
         :collapsed="isNavbarCollapsed"
-        show-trigger="arrow-circle"
         bordered
         @collapse="isNavbarCollapsed = true"
         @expand="isNavbarCollapsed = false"

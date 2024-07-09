@@ -66,7 +66,10 @@ async function handleSave(bookId: string) {
               </div>
               <div class="flex flex-row-reverse gap-2">
                 <n-button size="medium" type="primary" @click="handleOpenDrawer(book)">
-                  Show more...
+                  <template #icon>
+                    <Icon name="material-symbols:more-horiz" />
+                  </template>
+                  Show more
                 </n-button>
               </div>
             </div>
@@ -99,10 +102,16 @@ async function handleSave(bookId: string) {
           <n-divider />
           <div class="flex flex-col flex-grow gap-2 w-full">
             <n-button strong size="medium" type="primary" :is-loading="isOrdering" @click="handleOrder(selectedBook.id)">
-              Reserve Book
+              <template #icon>
+                <Icon name="material-symbols:shopping-cart-outline-rounded" />
+              </template>
+              Order
             </n-button>
             <n-button size="medium" @click="handleSave(selectedBook.id)">
-              Save
+              <template #icon>
+                <Icon name="material-symbols:bookmark-heart-outline" />
+              </template>
+              Save for later
             </n-button>
           </div>
         </div>

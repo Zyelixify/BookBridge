@@ -1,13 +1,25 @@
 <script setup lang="ts">
 const props = defineProps<{ accountId: string }>()
 const { $trpc } = useNuxtApp()
+const isLoading = ref(false)
+const events = ref()
 
-const events = await $trpc.event.findManyEvent.query({ where: { accountId: props.accountId }, take: 5 })
+async function fetchEvents() {
+  isLoading.value = true
+  events.value = await $trpc.event.findManyEvent.query({ where: { accountId: props.accountId }, take: 5 })
+  isLoading.value = false
+}
+onMounted(() => fetchEvents())
 </script>
 
 <template>
   <n-card title="Recent Notifications">
-    <n-list v-if="events.length > 0" hoverable clickable class="flex flex-col">
+    <template #header-extra>
+      <n-button :loading="isLoading" @click="fetchEvents">
+        <Icon v-if="!isLoading" name="material-symbols:refresh" size="24" />
+      </n-button>
+    </template>
+    <n-list v-if="Array.isArray(events) && events.length > 0" hoverable clickable class="flex flex-col">
       <n-list-item v-for="event in events" :key="event.id" class="flex-auto w-full">
         <n-thing>
           <template #avatar>
