@@ -44,7 +44,7 @@ async function handleSave(bookId: string) {
   <Page title="Books" icon="material-symbols:book-2-outline-rounded">
     <n-infinite-scroll class="h-full" :distance="10" @load="fetchMoreBooks">
       <n-list hoverable clickable class="flex flex-wrap">
-        <n-list-item v-for="book in books" :key="book.isbn" class="flex-auto w-full sm:w-1/2 lg:w-1/3">
+        <n-list-item v-for="book in books" :key="book.isbn" class="flex-auto w-full lg:w-1/2 xl:w-1/3 2xl:1/4">
           <div :title="book.title" class="flex flex-row gap-4 p-4 h-full">
             <div class="w-32 h-48 border border-gray-300 rounded-sm overflow-hidden">
               <n-image
