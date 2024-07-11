@@ -58,3 +58,22 @@ Build the application for production:
 ```bash
 npm run build
 ```
+## Running on GitHub Codespaces
+After the codespace is initialized, you have to add the following environment variables to a .env file:
+
+```
+DATABASE_PRISMA_URL=file:./db.sqlite
+DATABASE_URL_NON_POOLING=file:./db.sqlite
+```
+
+Then you can push the database schema
+
+```bash
+pnpm prisma db push
+```
+
+Then, you can run the development server:
+
+```bash
+pnpm dev
+```
