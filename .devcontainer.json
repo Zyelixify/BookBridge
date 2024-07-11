@@ -1,0 +1,5 @@
+{
+    "name": "BookBridge",
+    "postCreateCommand": "npm install -g pnpm && pnpm install",    
+    "postStartCommand": "pnpm dev"
+  }
